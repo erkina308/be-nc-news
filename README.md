@@ -21,7 +21,7 @@ Dotenv loads the environment variables into the property: process.env
 
 process.env can be used like so:
 
-const ENV = process.env.NODE_ENV || 'development';
+const ENV = process.env.NODE_ENV || 'development'
 
 require('dotenv').config({
 path: `${__dirname}/../.env.${ENV}`,
