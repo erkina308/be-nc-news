@@ -3,10 +3,10 @@ const app = express();
 
 const { getTopics } = require("./controllers/topics.controllers");
 
-app.use(express.json());
+const { getAllEndpoints } = require("./controllers/endpoints.controllers");
 
 app.get("/api/topics", getTopics);
 
-//error handling below
+app.get("/api", getAllEndpoints);
 
 module.exports = app;
