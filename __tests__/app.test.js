@@ -39,13 +39,16 @@ describe("/api/articles/:article_id", () => {
       .get("/api/articles/1")
       .expect(200)
       .then(({ body }) => {
-        expect(body[0].article_id).toBe(1)
-        expect(body[0].title).toBe('Living in the shadow of a great man')
-        expect(body[0].topic).toBe('mitch')
-        expect(body[0].author).toBe('butter_bridge')
-        expect(body[0].body).toBe('I find this existence challenging')
-        expect(body[0].created_at).toBe('2020-07-09T20:11:00.000Z')
-        expect(body[0].votes).toBe(100)
+        body.forEach((article) => {
+          expect(article.article_id).toBe(1);
+          expect(article.title).toBe("Living in the shadow of a great man");
+          expect(article.topic).toBe("mitch");
+          expect(article.author).toBe("butter_bridge");
+          expect(article.body).toBe("I find this existence challenging");
+          expect(article.created_at).toBe("2020-07-09T20:11:00.000Z");
+          expect(article.votes).toBe(100);
+        })
+
       });
   });
   test("GET: 404 sends an appropriate error status alongside an error message when given a valid but non-existent id", () => {
@@ -60,8 +63,42 @@ describe("/api/articles/:article_id", () => {
     return request(app)
       .get("/api/articles/invalid-id")
       .expect(400)
-      .then(({body}) => {
-        expect(body.msg).toBe("Bad request")
-      })
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("/api/articles/:article_id/comments", () => {
+  test("GET: 200 responds with an array of comments for the given article id", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(11);
+        body.forEach((comment) => {
+          expect(typeof comment.body).toBe("string");
+          expect(typeof comment.votes).toBe("number");
+          expect(typeof comment.author).toBe("string");
+          expect(typeof comment.article_id).toBe("number");
+          expect(typeof comment.created_at).toBe("string");
+        });
+      });
+  });
+  test("GET: 404 sends an appropriate error status alongside an error message when given a valid but non-existent id", () => {
+    return request(app)
+      .get("/api/articles/1000/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article does not exist");
+      });
+  });
+  test("GET: 400 sends an appropriate error status alongside an error message when given an invalid id", () => {
+    return request(app)
+      .get("/api/articles/invalid-id/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
   });
 });
