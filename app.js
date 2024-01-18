@@ -7,6 +7,7 @@ const {
   patchArticleById,
   deleteCommentByCommentId,
 } = require("./controllers/articles.controllers");
+const { getUsers } = require("./controllers/users.controllers")
 
 const express = require("express");
 const app = express();
@@ -25,6 +26,8 @@ app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 app.patch("/api/articles/:article_id", patchArticleById);
 
 app.delete("/api/comments/:comment_id", deleteCommentByCommentId);
+
+app.get("/api/users", getUsers);
 
 //error handling
 

@@ -266,3 +266,20 @@ describe("/api/comments/:comment_id", () => {
     return request(app).delete("/api/comments/invalid-id").expect(400);
   });
 });
+
+describe("/api/users", () => {
+  test("GET: 200 Sends an array of user objects with the properties of username, name and avatar", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(4);
+        body.forEach((user) => {
+          expect(typeof user.username).toBe("string");
+          expect(typeof user.name).toBe("string");
+          expect(typeof user.avatar_url).toBe("string");
+        });
+      });
+  });
+  
+});
