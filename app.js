@@ -1,14 +1,14 @@
-const express = require("express");
-const app = express();
-
 const { getTopics } = require("./controllers/topics.controllers");
 const { getAllEndpoints } = require("./controllers/endpoints.controllers");
 const {
   getArticleById,
   getCommentByArticleId,
   postCommentByArticleId,
+  patchArticleById,
 } = require("./controllers/articles.controllers");
 
+const express = require("express");
+const app = express();
 app.use(express.json());
 
 app.get("/api/topics", getTopics);
@@ -20,6 +20,8 @@ app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles/:article_id/comments", getCommentByArticleId);
 
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
+
+app.patch("/api/articles/:article_id", patchArticleById);
 
 //error handling
 
