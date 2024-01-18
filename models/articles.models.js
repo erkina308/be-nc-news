@@ -11,6 +11,17 @@ exports.selectArticleById = (id) => {
     });
 };
 
+exports.selectUser = (user) => {
+  return db
+    .query(`SELECT username FROM users WHERE username = $1;`, [user])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ msg: "User does not exist" });
+      }
+      return rows;
+    });
+};
+
 exports.selectCommentByArticleId = (article_id) => {
   let queryStr = `
   SELECT comments.article_id, comments.comment_id, comments.author, comments.votes, comments.created_at, comments.body FROM comments AS comments
@@ -27,27 +38,27 @@ exports.selectCommentByArticleId = (article_id) => {
 };
 
 exports.insertCommentByArticleId = (article_id, comment) => {
-  let queryStr = `INSERT INTO comments`;
+  let queryStr = `
+  INSERT INTO comments
+  (article_id, author, body)
+  VALUES
+  ($1, $2, $3)
+  RETURNING *;`;
 
-  if (article_id) {
-    return db
-      .query("SELECT * FROM articles WHERE article_id = $1;", [article_id])
-      .then(({ rows }) => {
-        if (rows.length === 0) {
-          return Promise.reject({ msg: "Article does not exist" });
-        }
+  return db
+    .query(queryStr, [article_id, comment.username, comment.body])
+    .then(({ rows }) => {
+      return rows;
+    });
+};
 
-        queryStr += `
-        (article_id, author, body)
-        VALUES
-        ($1, $2, $3)
-        RETURNING *;
-        `;
-        return db
-          .query(queryStr, [article_id, comment.author, comment.body])
-          .then(({ rows }) => {
-            return rows;
-          });
-      });
-  }
+exports.updateArticleById = (article_id, numToIncreaseBy) => {
+  let queryStr = `
+  UPDATE articles SET votes = votes + $1
+  WHERE article_id = $2
+  RETURNING *;
+  `;
+  return db.query(queryStr, [numToIncreaseBy, article_id]).then(({ rows }) => {
+    return rows;
+  });
 };

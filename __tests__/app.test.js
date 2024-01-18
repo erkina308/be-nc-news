@@ -100,15 +100,15 @@ describe("/api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("Bad request");
       });
   });
-//   test("GET: 200 responds with an empty array for an article id that exists but has no comments", () => {
-//     return request(app)
-//       .get("/api/articles/7/comments")
-//       .expect(200)
-//       .then(({ body }) => {
-//         console.log(body, "<--- body in test");
-//         expect(body.comment).toEqual([]);
-//       });
-//   });
+  //   test("GET: 200 responds with an empty array for an article id that exists but has no comments", () => {
+  //     return request(app)
+  //       .get("/api/articles/7/comments")
+  //       .expect(200)
+  //       .then(({ body }) => {
+  //         console.log(body, "<--- body in test");
+  //         expect(body.comment).toEqual([]);
+  //       });
+  //   });
 });
 
 describe("/api/articles/:article_id/comments", () => {
@@ -116,7 +116,7 @@ describe("/api/articles/:article_id/comments", () => {
     return request(app)
       .post("/api/articles/1/comments")
       .send({
-        author: "butter_bridge",
+        username: "butter_bridge",
         body: "What is this article about?",
       })
       .expect(201)
@@ -136,7 +136,7 @@ describe("/api/articles/:article_id/comments", () => {
     return request(app)
       .post("/api/articles/1000/comments")
       .send({
-        author: "butter_bridge",
+        username: "butter_bridge",
         body: "What is this article about?",
       })
       .expect(404)
@@ -148,7 +148,7 @@ describe("/api/articles/:article_id/comments", () => {
     return request(app)
       .post("/api/articles/invalid-id/comments")
       .send({
-        author: "butter_bridge",
+        username: "butter_bridge",
         body: "What is this article about?",
       })
       .expect(400)
@@ -156,15 +156,101 @@ describe("/api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("Bad request");
       });
   });
-  test("POST: 400 sends an appropriate error status alongside an error message when given an invalid id", () => {
+  test("POST: 400 sends an appropriate error status alongside an error message when missing a body property", () => {
     return request(app)
       .post("/api/articles/1/comments")
       .send({
-        author: "butter_bridge",
+        username: "butter_bridge",
       })
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("POST: 404 sends an appropriate error status alongside an error message when given an invalid username", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({
+        username: "does_not_exist",
+        body: "What is this article about?",
+      })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("User does not exist");
+      });
+  });
+  test("POST: 400 sends an appropriate error status alongside an error message when missing a username property", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({
+        body: "What is this article about?",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("/api/articles/:article_id", () => {
+  test("PATCH: 200 responds with the updated article", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({
+        inc_votes: 1,
+      })
+      .expect(200)
+      .then(({ body }) => {
+        body.forEach((article) => {
+          expect(article.article_id).toBe(1);
+          expect(article.title).toBe("Living in the shadow of a great man");
+          expect(article.topic).toBe("mitch");
+          expect(article.author).toBe("butter_bridge");
+          expect(article.body).toBe("I find this existence challenging");
+          expect(article.created_at).toBe("2020-07-09T20:11:00.000Z");
+          expect(article.votes).toBe(101);
+        });
+      });
+  });
+  test("PATCH: 200 responds with the updated article", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({
+        inc_votes: -1,
+      })
+      .expect(200)
+      .then(({ body }) => {
+        body.forEach((article) => {
+          expect(article.article_id).toBe(1);
+          expect(article.title).toBe("Living in the shadow of a great man");
+          expect(article.topic).toBe("mitch");
+          expect(article.author).toBe("butter_bridge");
+          expect(article.body).toBe("I find this existence challenging");
+          expect(article.created_at).toBe("2020-07-09T20:11:00.000Z");
+          expect(article.votes).toBe(99);
+        });
+      });
+  });
+  test("GET: 400 sends an appropriate error status alongside an error message when given an invalid id", () => {
+    return request(app)
+      .patch("/api/articles/invalid-id")
+      .send({
+        inc_votes: 20,
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("GET: 404 sends an appropriate error status alongside an error message when given a valid but non-existent id", () => {
+    return request(app)
+      .patch("/api/articles/1000")
+      .send({
+        inc_votes: 20,
+      })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article does not exist");
       });
   });
 });

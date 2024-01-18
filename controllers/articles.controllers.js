@@ -1,9 +1,9 @@
-const { response } = require("../app");
-const { checkIdExists } = require("../db/seeds/utils");
 const {
   selectArticleById,
   selectCommentByArticleId,
   insertCommentByArticleId,
+  updateArticleById,
+  selectUser,
 } = require("../models/articles.models");
 
 exports.getArticleById = (req, res, next) => {
@@ -30,10 +30,39 @@ exports.getCommentByArticleId = (req, res, next) => {
 
 exports.postCommentByArticleId = (req, res, next) => {
   const newComment = req.body;
+  const username = newComment.username;
+  const body = newComment.body;
   const { article_id } = req.params;
-  insertCommentByArticleId(article_id, newComment)
+  if (!body) {
+    res.status(400).send({ msg: "Bad request" });
+  }
+  const select1 = selectArticleById(article_id);
+  const select2 = selectCommentByArticleId(article_id);
+  const insert = insertCommentByArticleId(article_id, newComment);
+  const findUser = selectUser(username);
+  const promises = [select1, select2, insert, findUser];
+  Promise.all(promises)
     .then((comment) => {
-      res.status(201).send({ comment: comment });
+      const commentToSend = comment[2];
+      res.status(201).send({ comment: commentToSend });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.patchArticleById = (req, res, next) => {
+  const { inc_votes } = req.body;
+  const numToIncreaseBy = inc_votes;
+  const { article_id } = req.params;
+
+  const select = selectArticleById(article_id);
+  const update = updateArticleById(article_id, numToIncreaseBy);
+  const promises = [select, update];
+  Promise.all(promises)
+    .then((article) => {
+      const articleToUpdate = article[1];
+      res.status(200).send(articleToUpdate);
     })
     .catch((err) => {
       next(err);
