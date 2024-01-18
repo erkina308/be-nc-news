@@ -2,10 +2,21 @@ const db = require("../db/connection");
 
 exports.selectArticleById = (id) => {
   return db
-    .query("SELECT * FROM articles WHERE article_id = $1;", [id])
+    .query(`SELECT * FROM articles WHERE article_id = $1;`, [id])
     .then(({ rows }) => {
       if (rows.length === 0) {
         return Promise.reject({ msg: "Article does not exist" });
+      }
+      return rows;
+    });
+};
+
+exports.selectCommentById = (id) => {
+  return db
+    .query(`SELECT * FROM comments WHERE comment_id = $1`, [id])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ msg: "Comment does not exist" });
       }
       return rows;
     });
@@ -59,6 +70,20 @@ exports.updateArticleById = (article_id, numToIncreaseBy) => {
   RETURNING *;
   `;
   return db.query(queryStr, [numToIncreaseBy, article_id]).then(({ rows }) => {
+    return rows;
+  });
+};
+
+exports.removeCommentById = (comment_id) => {
+  let queryStr = `
+DELETE FROM comments
+WHERE comment_id = $1
+RETURNING *;
+`;
+  return db.query(queryStr, [comment_id]).then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject({ msg: "Comment does not exist" });
+    }
     return rows;
   });
 };
