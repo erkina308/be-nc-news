@@ -5,6 +5,6 @@
 --ON comments.article_id = articles.article_id AND articles.article_id = 
 --ORDER BY comments.created_at DESC
   
-SELECT username FROM users WHERE username = 'butter_bridge';
+SELECT comment_id, author, votes, body FROM comments;
   
   

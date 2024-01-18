@@ -254,3 +254,15 @@ describe("/api/articles/:article_id", () => {
       });
   });
 });
+
+describe("/api/comments/:comment_id", () => {
+  test("DELETE: 204 deletes the selected comment", () => {
+    return request(app).delete("/api/comments/5").expect(204);
+  });
+  test("DELETE: 404 sends an appropriate error status alongside an error message when given a valid but non-existent id", () => {
+    return request(app).delete("/api/comments/1000").expect(404);
+  });
+  test("DELETE: 400 sends an appropriate error status alongside an error message when given an invalid id", () => {
+    return request(app).delete("/api/comments/invalid-id").expect(400);
+  });
+});

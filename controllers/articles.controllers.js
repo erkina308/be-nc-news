@@ -4,6 +4,8 @@ const {
   insertCommentByArticleId,
   updateArticleById,
   selectUser,
+  selectCommentById,
+  removeCommentById,
 } = require("../models/articles.models");
 
 exports.getArticleById = (req, res, next) => {
@@ -63,6 +65,22 @@ exports.patchArticleById = (req, res, next) => {
     .then((article) => {
       const articleToUpdate = article[1];
       res.status(200).send(articleToUpdate);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.deleteCommentByCommentId = (req, res, next) => {
+  const { comment_id } = req.params;
+  
+  const select = selectCommentById(comment_id);
+  const remove = removeCommentById(comment_id);
+  const promises = [select, remove];
+  Promise.all(promises)
+    .then((response) => {
+      const toDelete = response[1];
+      res.status(204).send(toDelete);
     })
     .catch((err) => {
       next(err);
