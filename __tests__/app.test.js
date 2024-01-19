@@ -39,15 +39,13 @@ describe("/api/articles/:article_id", () => {
       .get("/api/articles/1")
       .expect(200)
       .then(({ body }) => {
-        body.article.forEach((article) => {
-          expect(article.article_id).toBe(1);
-          expect(article.title).toBe("Living in the shadow of a great man");
-          expect(article.topic).toBe("mitch");
-          expect(article.author).toBe("butter_bridge");
-          expect(article.body).toBe("I find this existence challenging");
-          expect(article.created_at).toBe("2020-07-09T20:11:00.000Z");
-          expect(article.votes).toBe(100);
-        });
+        expect(body.article.article_id).toBe(1);
+        expect(body.article.title).toBe("Living in the shadow of a great man");
+        expect(body.article.topic).toBe("mitch");
+        expect(body.article.author).toBe("butter_bridge");
+        expect(body.article.body).toBe("I find this existence challenging");
+        expect(body.article.created_at).toBe("2020-07-09T20:11:00.000Z");
+        expect(body.article.votes).toBe(100);
       });
   });
   test("GET: 404 sends an appropriate error status alongside an error message when given a valid but non-existent id", () => {
@@ -350,11 +348,10 @@ describe("GET /api/articles", () => {
       .get("/api/articles?topic=paper")
       .expect(200)
       .then(({ body }) => {
-        expect(body.articles).toEqual([])
-        });
+        expect(body.articles).toEqual([]);
       });
   });
-
+});
 
 describe("GET /api/articles/:article_id", () => {
   test("GET: 200 responds with the selected article with a comment count", () => {
@@ -362,10 +359,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/1")
       .expect(200)
       .then(({ body }) => {
-        expect(body.article.length).toBe(1);
-        body.article.forEach((article) => {
-          expect(article.comment_count).toBe("11");
-        });
+        expect(body.article.comment_count).toBe("11");
       });
   });
 });
