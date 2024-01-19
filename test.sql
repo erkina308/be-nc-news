@@ -5,6 +5,8 @@
 --ON comments.article_id = articles.article_id AND articles.article_id = 
 --ORDER BY comments.created_at DESC
   
-SELECT comment_id, author, votes, body FROM comments;
+SELECT * FROM articles WHERE topic = "mitch";
+
+
   
   

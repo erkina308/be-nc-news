@@ -29,6 +29,8 @@ app.delete("/api/comments/:comment_id", deleteCommentByCommentId);
 
 app.get("/api/users", getUsers);
 
+app.get("/api/articles?topic=")
+
 //error handling
 
 app.use((err, req, res, next) => {

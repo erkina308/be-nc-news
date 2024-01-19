@@ -21,9 +21,13 @@ exports.getArticleById = (req, res, next) => {
 
 exports.getCommentByArticleId = (req, res, next) => {
   const { article_id } = req.params;
-  selectCommentByArticleId(article_id)
+  const select1 = selectArticleById(article_id);
+  const select2 = selectCommentByArticleId(article_id);
+  const promises = [select1, select2];
+  Promise.all(promises)
     .then((comment) => {
-      res.status(200).send({ comment: comment });
+      const commentToSend = comment[1];
+      res.status(200).send({ comment: commentToSend });
     })
     .catch((err) => {
       next(err);
@@ -63,8 +67,13 @@ exports.patchArticleById = (req, res, next) => {
   const promises = [select, update];
   Promise.all(promises)
     .then((article) => {
-      const articleToUpdate = article[1];
-      res.status(200).send(articleToUpdate);
+      if (inc_votes !== null) {
+        const articleToUpdate = article[1];
+        res.status(200).send(articleToUpdate);
+      } else {
+        console.log(article[0], "<--- article in controller");
+        res.status(200).send(article[0]);
+      }
     })
     .catch((err) => {
       next(err);
@@ -73,7 +82,7 @@ exports.patchArticleById = (req, res, next) => {
 
 exports.deleteCommentByCommentId = (req, res, next) => {
   const { comment_id } = req.params;
-  
+
   const select = selectCommentById(comment_id);
   const remove = removeCommentById(comment_id);
   const promises = [select, remove];
