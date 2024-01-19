@@ -84,3 +84,17 @@ RETURNING *;
     return rows;
   });
 };
+
+exports.selectArticles = (topic) => {
+  let queryStr = `SELECT * FROM articles`;
+
+  const query = [];
+
+  if (topic) {
+    queryStr += ` WHERE topic = $1;`;
+    query.push(topic);
+  }
+  return db.query(queryStr, query).then(({ rows }) => {
+    return rows;
+  });
+};

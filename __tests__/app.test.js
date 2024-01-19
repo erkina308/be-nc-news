@@ -252,50 +252,97 @@ describe("/api/articles/:article_id", () => {
         expect(body.msg).toBe("Article does not exist");
       });
   });
-  // test("GET: 200 responds with an unchanged article due to the absence of the property in the request body", () => {
-  //   return request(app)
-  //     .patch("/api/articles/1")
-  //     .send({})
-  //     .expect(200)
-  //     .then(({ body }) => {
-  //       console.log(body, "<--- body in test")
-  //       body.forEach((article) => {
-  //         expect(article.article_id).toBe(1);
-  //         expect(article.title).toBe("Living in the shadow of a great man");
-  //         expect(article.topic).toBe("mitch");
-  //         expect(article.author).toBe("butter_bridge");
-  //         expect(article.body).toBe("I find this existence challenging");
-  //         expect(article.created_at).toBe("2020-07-09T20:11:00.000Z");
-  //         expect(article.votes).toBe(100);
-  //       });
-  //     });
-  // });
+});
+// test("GET: 200 responds with an unchanged article due to the absence of the property in the request body", () => {
+//   return request(app)
+//     .patch("/api/articles/1")
+//     .send({})
+//     .expect(200)
+//     .then(({ body }) => {
+//       console.log(body, "<--- body in test")
+//       body.forEach((article) => {
+//         expect(article.article_id).toBe(1);
+//         expect(article.title).toBe("Living in the shadow of a great man");
+//         expect(article.topic).toBe("mitch");
+//         expect(article.author).toBe("butter_bridge");
+//         expect(article.body).toBe("I find this existence challenging");
+//         expect(article.created_at).toBe("2020-07-09T20:11:00.000Z");
+//         expect(article.votes).toBe(100);
+//       });
+//     });
+// });
 
-  describe("/api/comments/:comment_id", () => {
-    test("DELETE: 204 deletes the selected comment", () => {
-      return request(app).delete("/api/comments/5").expect(204);
-    });
-    test("DELETE: 404 sends an appropriate error status alongside an error message when given a valid but non-existent id", () => {
-      return request(app).delete("/api/comments/1000").expect(404);
-    });
-    test("DELETE: 400 sends an appropriate error status alongside an error message when given an invalid id", () => {
-      return request(app).delete("/api/comments/invalid-id").expect(400);
-    });
+describe("/api/comments/:comment_id", () => {
+  test("DELETE: 204 deletes the selected comment", () => {
+    return request(app).delete("/api/comments/5").expect(204);
   });
-
-  describe("/api/users", () => {
-    test("GET: 200 Sends an array of user objects with the properties of username, name and avatar", () => {
-      return request(app)
-        .get("/api/users")
-        .expect(200)
-        .then(({ body }) => {
-          expect(body.length).toBe(4);
-          body.forEach((user) => {
-            expect(typeof user.username).toBe("string");
-            expect(typeof user.name).toBe("string");
-            expect(typeof user.avatar_url).toBe("string");
-          });
+  test("DELETE: 404 sends an appropriate error status alongside an error message when given a valid but non-existent id", () => {
+    return request(app)
+      .delete("/api/comments/1000")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Comment does not exist");
+      });
+  });
+  test("DELETE: 400 sends an appropriate error status alongside an error message when given an invalid id", () => {
+    return request(app)
+      .delete("/api/comments/invalid-id")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+describe("/api/users", () => {
+  test("GET: 200 Sends an array of user objects with the properties of username, name and avatar", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.users.length).toBe(4);
+        body.users.forEach((user) => {
+          expect(typeof user.username).toBe("string");
+          expect(typeof user.name).toBe("string");
+          expect(typeof user.avatar_url).toBe("string");
         });
-    });
+      });
+  });
+});
+
+describe("GET /api/articles", () => {
+  test("GET: 200 sends an array with articles", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles.length).toBe(13);
+        body.articles.forEach((article) => {
+          expect(typeof article.title).toBe("string");
+          expect(typeof article.topic).toBe("string");
+          expect(typeof article.author).toBe("string");
+          expect(typeof article.body).toBe("string");
+          expect(typeof article.created_at).toBe("string");
+          expect(typeof article.votes).toBe("number");
+        });
+      });
+  });
+  test("GET: 200 sends an array with articles filtered by topic", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles.length).toBe(12);
+        body.articles.forEach((article) => {
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
+  test("GET: 404 sends an appropriate error status alongside an error message when given a topic that does not exist in database", () => {
+    return request(app)
+      .get("/api/articles?topic=non-existent-topic")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Topic does not exist");
+      });
   });
 });
