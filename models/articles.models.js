@@ -41,9 +41,6 @@ exports.selectCommentByArticleId = (article_id) => {
   ORDER BY comments.created_at DESC;`;
 
   return db.query(queryStr, [article_id]).then(({ rows }) => {
-    if (rows.length === 0) {
-      return Promise.reject({ msg: "Article does not exist" });
-    }
     return rows;
   });
 };

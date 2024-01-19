@@ -100,15 +100,14 @@ describe("/api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("Bad request");
       });
   });
-  //   test("GET: 200 responds with an empty array for an article id that exists but has no comments", () => {
-  //     return request(app)
-  //       .get("/api/articles/7/comments")
-  //       .expect(200)
-  //       .then(({ body }) => {
-  //         console.log(body, "<--- body in test");
-  //         expect(body.comment).toEqual([]);
-  //       });
-  //   });
+  test("GET: 200 responds with an empty array for an article id that exists but has no comments", () => {
+    return request(app)
+      .get("/api/articles/7/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comment).toEqual([]);
+      });
+  });
 });
 
 describe("/api/articles/:article_id/comments", () => {
@@ -193,7 +192,7 @@ describe("/api/articles/:article_id/comments", () => {
 });
 
 describe("/api/articles/:article_id", () => {
-  test("PATCH: 200 responds with the updated article", () => {
+  test("PATCH: 200 responds with the updated article with the votes incremented by 1", () => {
     return request(app)
       .patch("/api/articles/1")
       .send({
@@ -212,7 +211,7 @@ describe("/api/articles/:article_id", () => {
         });
       });
   });
-  test("PATCH: 200 responds with the updated article", () => {
+  test("PATCH: 200 responds with the updated article with the votes decremented by 1", () => {
     return request(app)
       .patch("/api/articles/1")
       .send({
@@ -253,16 +252,50 @@ describe("/api/articles/:article_id", () => {
         expect(body.msg).toBe("Article does not exist");
       });
   });
-});
+  // test("GET: 200 responds with an unchanged article due to the absence of the property in the request body", () => {
+  //   return request(app)
+  //     .patch("/api/articles/1")
+  //     .send({})
+  //     .expect(200)
+  //     .then(({ body }) => {
+  //       console.log(body, "<--- body in test")
+  //       body.forEach((article) => {
+  //         expect(article.article_id).toBe(1);
+  //         expect(article.title).toBe("Living in the shadow of a great man");
+  //         expect(article.topic).toBe("mitch");
+  //         expect(article.author).toBe("butter_bridge");
+  //         expect(article.body).toBe("I find this existence challenging");
+  //         expect(article.created_at).toBe("2020-07-09T20:11:00.000Z");
+  //         expect(article.votes).toBe(100);
+  //       });
+  //     });
+  // });
 
-describe("/api/comments/:comment_id", () => {
-  test("DELETE: 204 deletes the selected comment", () => {
-    return request(app).delete("/api/comments/5").expect(204);
+  describe("/api/comments/:comment_id", () => {
+    test("DELETE: 204 deletes the selected comment", () => {
+      return request(app).delete("/api/comments/5").expect(204);
+    });
+    test("DELETE: 404 sends an appropriate error status alongside an error message when given a valid but non-existent id", () => {
+      return request(app).delete("/api/comments/1000").expect(404);
+    });
+    test("DELETE: 400 sends an appropriate error status alongside an error message when given an invalid id", () => {
+      return request(app).delete("/api/comments/invalid-id").expect(400);
+    });
   });
-  test("DELETE: 404 sends an appropriate error status alongside an error message when given a valid but non-existent id", () => {
-    return request(app).delete("/api/comments/1000").expect(404);
-  });
-  test("DELETE: 400 sends an appropriate error status alongside an error message when given an invalid id", () => {
-    return request(app).delete("/api/comments/invalid-id").expect(400);
+
+  describe("/api/users", () => {
+    test("GET: 200 Sends an array of user objects with the properties of username, name and avatar", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.length).toBe(4);
+          body.forEach((user) => {
+            expect(typeof user.username).toBe("string");
+            expect(typeof user.name).toBe("string");
+            expect(typeof user.avatar_url).toBe("string");
+          });
+        });
+    });
   });
 });
