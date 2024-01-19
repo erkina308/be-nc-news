@@ -1,3 +1,4 @@
+const { checkTopicExists } = require("../check-topic-exists");
 const {
   selectArticleById,
   selectCommentByArticleId,
@@ -6,6 +7,7 @@ const {
   selectUser,
   selectCommentById,
   removeCommentById,
+  selectArticles,
 } = require("../models/articles.models");
 
 exports.getArticleById = (req, res, next) => {
@@ -90,6 +92,26 @@ exports.deleteCommentByCommentId = (req, res, next) => {
     .then((response) => {
       const toDelete = response[1];
       res.status(204).send(toDelete);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getArticles = (req, res, next) => {
+  const { topic } = req.query;
+  const select = selectArticles(topic);
+
+  const promises = [select];
+  if (topic) {
+    const checkExists = checkTopicExists(topic);
+    promises.push(checkExists);
+  }
+  
+  Promise.all(promises)
+    .then((article) => {
+      const toSend = article[0];
+      res.status(200).send({ articles: toSend });
     })
     .catch((err) => {
       next(err);

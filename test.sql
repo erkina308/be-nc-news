@@ -5,8 +5,7 @@
 --ON comments.article_id = articles.article_id AND articles.article_id = 
 --ORDER BY comments.created_at DESC
   
-SELECT * FROM articles WHERE topic = "mitch";
-
+SELECT * FROM articles WHERE topic = 'cats';
 
   
   
