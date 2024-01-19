@@ -39,7 +39,7 @@ describe("/api/articles/:article_id", () => {
       .get("/api/articles/1")
       .expect(200)
       .then(({ body }) => {
-        body.forEach((article) => {
+        body.article.forEach((article) => {
           expect(article.article_id).toBe(1);
           expect(article.title).toBe("Living in the shadow of a great man");
           expect(article.topic).toBe("mitch");
@@ -343,6 +343,29 @@ describe("GET /api/articles", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Topic does not exist");
+      });
+  });
+  test("GET: 200 sends an array with an empty topic as it is not attached to any articles", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toEqual([])
+        });
+      });
+  });
+
+
+describe("GET /api/articles/:article_id", () => {
+  test("GET: 200 responds with the selected article with a comment count", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article.length).toBe(1);
+        body.article.forEach((article) => {
+          expect(article.comment_count).toBe("11");
+        });
       });
   });
 });

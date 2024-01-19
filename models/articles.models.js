@@ -1,14 +1,19 @@
 const db = require("../db/connection");
 
 exports.selectArticleById = (id) => {
-  return db
-    .query(`SELECT * FROM articles WHERE article_id = $1;`, [id])
-    .then(({ rows }) => {
-      if (rows.length === 0) {
-        return Promise.reject({ msg: "Article does not exist" });
-      }
-      return rows;
-    });
+  let queryStr = `
+  SELECT articles.*, COUNT(comments.comment_id) AS comment_count FROM articles AS articles
+  LEFT JOIN comments AS comments
+  ON articles.article_id = comments.article_id 
+  WHERE articles.article_id = $1
+  GROUP BY articles.article_id;`;
+
+  return db.query(queryStr, [id]).then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject({ msg: "Article does not exist" });
+    }
+    return rows;
+  });
 };
 
 exports.selectCommentById = (id) => {
