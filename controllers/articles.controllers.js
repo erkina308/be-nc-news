@@ -13,8 +13,8 @@ const {
 exports.getArticleById = (req, res, next) => {
   const { article_id } = req.params;
   selectArticleById(article_id)
-    .then((response) => {
-      res.status(200).send(response);
+    .then((article) => {
+      res.status(200).send({ article: article });
     })
     .catch((err) => {
       next(err);
@@ -107,7 +107,7 @@ exports.getArticles = (req, res, next) => {
     const checkExists = checkTopicExists(topic);
     promises.push(checkExists);
   }
-  
+
   Promise.all(promises)
     .then((article) => {
       const toSend = article[0];
