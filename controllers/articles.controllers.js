@@ -71,7 +71,7 @@ exports.patchArticleById = (req, res, next) => {
         const articleToUpdate = article[1];
         res.status(200).send(articleToUpdate);
       } else {
-        console.log(article[0], "<--- article in controller");
+        console.log(article[0], "<--- article within controller");
         res.status(200).send(article[0]);
       }
     })
