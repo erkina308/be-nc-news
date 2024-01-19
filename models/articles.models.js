@@ -12,7 +12,7 @@ exports.selectArticleById = (id) => {
     if (rows.length === 0) {
       return Promise.reject({ msg: "Article does not exist" });
     }
-    return rows;
+    return rows[0];
   });
 };
 
