@@ -363,3 +363,22 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 });
+
+describe("GET /api/articles", () => {
+  test("GET: 200 responds with the articles sorted by the created at column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=created_at")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("created_at");
+      });
+  });
+  test("GET: 400 sends an appropriate error status alongside an error message when given an invalid sort by query", () => {
+    return request(app)
+      .get("/api/articles?sort_by=does-not-exist")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid sort by query");
+      });
+  });
+});

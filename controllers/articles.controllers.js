@@ -99,8 +99,8 @@ exports.deleteCommentByCommentId = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  const { topic } = req.query;
-  const select = selectArticles(topic);
+  const { sort_by, order, topic } = req.query;
+  const select = selectArticles(sort_by, order, topic);
 
   const promises = [select];
   if (topic) {
