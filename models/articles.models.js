@@ -90,15 +90,24 @@ RETURNING *;
   });
 };
 
-exports.selectArticles = (topic) => {
+exports.selectArticles = (sort_by = "created_at", order = "asc", topic) => {
+  if (!["created_at"].includes(sort_by)) {
+    return Promise.reject({
+      msg: "Invalid sort by query",
+    });
+  }
+
   let queryStr = `SELECT * FROM articles`;
 
   const query = [];
 
   if (topic) {
-    queryStr += ` WHERE topic = $1;`;
+    queryStr += ` WHERE topic = $1`;
     query.push(topic);
   }
+
+  queryStr += ` ORDER BY ${sort_by} ${order};`;
+
   return db.query(queryStr, query).then(({ rows }) => {
     return rows;
   });
