@@ -7,7 +7,7 @@ module.exports = [
     created_at: 1604728980000,
     votes: 0,
     article_img_url:
-      "https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?w=700&h=700",
+      "https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700",
   },
   {
     title: "The Rise Of Thinking Machines: How IBM's Watson Takes On The World",
@@ -27,7 +27,7 @@ module.exports = [
     created_at: 1582974720000,
     votes: 0,
     article_img_url:
-      "https://images.pexels.com/photos/11035471/pexels-photo-11035471.jpeg?w=700&h=700",
+      "https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700",
   },
   {
     title: "Making sense of Redux",
@@ -78,7 +78,7 @@ module.exports = [
     created_at: 1601940180000,
     votes: 0,
     article_img_url:
-      "https://images.pexels.com/photos/11035482/pexels-photo-11035482.jpeg?w=700&h=700",
+      "https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700",
   },
   {
     title: "Learn HTML5, CSS3, and Responsive WebSite Design in One Go",
@@ -99,7 +99,7 @@ module.exports = [
     created_at: 1593692580000,
     votes: 0,
     article_img_url:
-      "https://images.pexels.com/photos/11035481/pexels-photo-11035481.jpeg?w=700&h=700",
+      "https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700",
   },
   {
     title: "Designing Better JavaScript APIs",
@@ -149,7 +149,7 @@ module.exports = [
     created_at: 1584576840000,
     votes: 0,
     article_img_url:
-      "https://images.pexels.com/photos/262524/pexels-photo-262524.jpeg?w=700&h=700",
+      "https://images.pexels.com/photos/102448/pexels-photo-102448.jpeg?w=700&h=700",
   },
   {
     title: "History of FC Barcelona",
@@ -189,7 +189,7 @@ module.exports = [
     created_at: 1600002120000,
     votes: 0,
     article_img_url:
-      "https://images.pexels.com/photos/685382/pexels-photo-685382.jpeg?w=700&h=700",
+      "https://images.pexels.com/photos/1884576/pexels-photo-1884576.jpeg?w=700&h=700",
   },
   {
     title: "History of Football",
@@ -219,7 +219,7 @@ module.exports = [
     created_at: 1587129000000,
     votes: 0,
     article_img_url:
-      "https://images.pexels.com/photos/906073/pexels-photo-906073.jpeg?w=700&h=700",
+      "https://images.pexels.com/photos/3448250/pexels-photo-3448250.jpeg?w=700&h=700",
   },
   {
     title: "Sunday league football",
